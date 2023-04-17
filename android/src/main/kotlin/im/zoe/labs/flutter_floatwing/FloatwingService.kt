@@ -35,8 +35,8 @@ class FloatwingService : MethodChannel.MethodCallHandler, BasicMessageChannel.Me
 
     private lateinit var engGroup: FlutterEngineGroup
 
-    lateinit var _channel: MethodChannel
-    lateinit var _message: BasicMessageChannel<Any?>
+    lateinit var mChannel: MethodChannel
+    lateinit var mMessage: BasicMessageChannel<Any?>
 
     var subscribedEvents: HashMap<String, Boolean> = HashMap()
 
@@ -241,7 +241,7 @@ class FloatwingService : MethodChannel.MethodCallHandler, BasicMessageChannel.Me
         return true
     }
 
-    private fun demoteService(): Boolean {
+    fun demoteService(): Boolean {
         Log.i(TAG, "[service] demote service to background")
         stopForeground(true)
         return true
@@ -350,9 +350,9 @@ class FloatwingService : MethodChannel.MethodCallHandler, BasicMessageChannel.Me
         Log.d(TAG, "[service] set service as handler $METHOD_CHANNEL/window for $eng")
         // set the method and message channel
         // this must be same as window, because we use the same method to call invoke
-        _channel = MethodChannel(eng.dartExecutor.binaryMessenger,
+        mChannel = MethodChannel(eng.dartExecutor.binaryMessenger,
             "$METHOD_CHANNEL/window").also { it.setMethodCallHandler(this) }
-        _message = BasicMessageChannel(eng.dartExecutor.binaryMessenger,
+        mMessage = BasicMessageChannel(eng.dartExecutor.binaryMessenger,
             "$METHOD_CHANNEL/window_msg", JSONMessageCodec.INSTANCE).also { it.setMessageHandler(this) }
         return true
     }

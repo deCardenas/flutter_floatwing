@@ -34,6 +34,25 @@ class FlutterFloatwingPlugin: FlutterPlugin, ActivityAware, MethodCallHandler, P
   private var serviceChannelInstalled = false
   private var isMain = false
 
+  companion object {
+
+    private const val TAG = "FloatwingPlugin"
+    private const val CHANNEL_NAME = "im.zoe.labs/flutter_floatwing/method"
+    private const val ALERT_WINDOW_PERMISSION = 1248
+
+    const val FLUTTER_ENGINE_CACHE_KEY = "flutter_engine_main"
+    const val SHARED_PREFERENCES_KEY = "flutter_floatwing_cache"
+    const val PIXEL_RADIO_KEY = "pixel_radio"
+    const val SYSTEM_CONFIG_KEY = "system_config"
+
+    fun permissionGiven(context: Context): Boolean {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        return Settings.canDrawOverlays(context)
+      }
+      return false
+    }
+  }
+
   override fun onAttachedToEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     mContext = binding.applicationContext
 
@@ -199,7 +218,7 @@ class FlutterFloatwingPlugin: FlutterPlugin, ActivityAware, MethodCallHandler, P
   }
 
   override fun onDetachedFromActivity() {
-
+    FloatwingService.instance?.onDestroy();
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
@@ -226,28 +245,4 @@ class FlutterFloatwingPlugin: FlutterPlugin, ActivityAware, MethodCallHandler, P
     requestPermissions()
   }
 
-  companion object {
-    @JvmStatic
-    fun registerWith(registrar: Registrar) {
-      val channel = MethodChannel(registrar.messenger(), CHANNEL_NAME)
-      channel.setMethodCallHandler(FlutterFloatwingPlugin())
-    }
-
-    private const val TAG = "FloatwingPlugin"
-    private const val CHANNEL_NAME = "im.zoe.labs/flutter_floatwing/method"
-    private const val ALERT_WINDOW_PERMISSION = 1248
-
-    const val FLUTTER_ENGINE_CACHE_KEY = "flutter_engine_main"
-    const val SHARED_PREFERENCES_KEY = "flutter_floatwing_cache"
-    const val CALLBACK_KEY = "callback_key"
-    const val PIXEL_RADIO_KEY = "pixel_radio"
-    const val SYSTEM_CONFIG_KEY = "system_config"
-
-    fun permissionGiven(context: Context): Boolean {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        return Settings.canDrawOverlays(context)
-      }
-      return false
-    }
-  }
 }

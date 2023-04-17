@@ -167,7 +167,7 @@ class FloatWindow(
         // plugin
         // check if we need to fire to plugin
         if (pluginNeed&&(true||service.subscribedEvents.containsKey("*")||service.subscribedEvents.containsKey(evtName))) {
-            simpleEmit(service._message, evtName, data)
+            simpleEmit(service.mMessage, evtName, data)
         }
 
         // emit parent engine
@@ -269,7 +269,7 @@ class FloatWindow(
                 Log.d(TAG, "[window] share data from $key with $targetId: $args")
                 if (targetId == null) {
                     Log.d(TAG, "[window] share data with plugin")
-                    return result.success(shareData(service._channel, args, source=key, result=result))
+                    return result.success(shareData(service.mChannel, args, source=key, result=result))
                 }
                 if (targetId == key) {
                     Log.d(TAG, "[window] can't share data with self")
